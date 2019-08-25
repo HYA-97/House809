@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 开启controller层中spring注解驱动  打开 Component Controller Service Reposity -->
+    <context:component-scan base-package="com.controller"></context:component-scan>
+
+    <!-- 开启springmvc特有的注解驱动  打开 @RequestMapping  @RequestParam  -->
+    <mvc:annotation-driven>
+        <mvc:message-converters><!--response.getWriter().Write()  @responsebody -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8" /><!--解决@responsebody响应中文乱码-->
+            </bean>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <mvc:default-servlet-handler/><!--DispatcherServlet-->
+    <!-- 视图解析器  location表示路径地址 -->
+
+    <!-- <mvc:resources mapping="/css/**" location="/css/"/>
+     <mvc:resources mapping="/js/**" location="/js/"/>
+     <mvc:resources mapping="/jsp/**" location="/jsp/"/>-->
+     <!--<mvc:resources mapping="**" location="/admin/"/>-->
+
+
+    <!--&lt;!&ndash; 处理jsp页面所在的前缀和后缀 &ndash;&gt;
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    &lt;!&ndash; 前缀,确定当前访问的页面路径地址 &ndash;&gt;
+    <property name="prefix">
+        <value>/page/</value>&lt;!&ndash; 放在WEB-INF文件夹之下的page文件夹 &ndash;&gt;
+    </property>
+    &lt;!&ndash; 后缀,确定要访问的文件类型 &ndash;&gt;
+    <property name="suffix">
+        <value>.jsp</value>
+    </property>
+    </bean>-->
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/page/" />
+        <property name="suffix" value=".jsp" />
+        <property name="order" value="1"></property>
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+    </bean>
+
+    <!-- 配置freeMarker视图解析器（可解析HTML） -->
+    <bean id="viewResolverFtl" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
+        <property name="contentType" value="text/html; charset=UTF-8"/>
+        <property name="exposeRequestAttributes" value="true" />
+        <property name="exposeSessionAttributes" value="true" />
+        <property name="exposeSpringMacroHelpers" value="true" />
+        <property name="cache" value="true" />
+        <property name="suffix" value=".html" />
+        <property name="order" value="0"/>
+    </bean>
+
+    <!-- 配置freeMarker的模板路径 -->
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/admin/"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">3600</prop>
+                <prop key="locale">zh_CN</prop>
+                <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+                <prop key="date_format">yyyy-MM-dd</prop>
+                <prop key="number_format">#.##</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- 静态资源文件放行 -->
+    <mvc:default-servlet-handler/>
+</beans>
