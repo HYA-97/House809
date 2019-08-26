@@ -56,7 +56,7 @@ rel=stylesheet type=text/css href="../css/style.css">
 <DIV class=intro>
 <DIV class=lefter>
   <c:forEach items="${list}" var="list">
-  <c:if test="${list.id==house.id&&list.userId==house.userId}">
+  <c:if test="${list.id==house.id}">
 <H1>${list.title}</H1>
 <DIV class=subinfo><fmt:formatDate value="${list.pubdate}" pattern="yyyy-MM-dd"></fmt:formatDate></DIV>
 <DIV class=houseinfo>

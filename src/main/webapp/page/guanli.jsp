@@ -21,10 +21,10 @@ rel=stylesheet type=text/css href="../css/style.css">
   <TBODY>
   <c:forEach items="${pageInfo.list}" var="h">
     <TR>
-      <TD class=house-thumb><SPAN><A href="/con5/houseOne?id=${h.id}&$userId=${h.userId}" target="_blank"><img src="http://localhost:81/${h.path}" width="100" height="75" alt=""></A></SPAN></TD>
+      <TD class=house-thumb><SPAN><A href="/con5/houseOne?id=${h.id}" target="_blank"><img src="http://localhost:81/${h.path}" width="100" height="75" alt=""></A></SPAN></TD>
       <TD>
         <DL>
-          <DT><A href="/con5/houseOne?id=${h.id}&$userId=${h.userId}" target="_blank">${h.title}</A></DT>
+          <DT><A href="/con5/houseOne?id=${h.id}" target="_blank">${h.title}</A></DT>
           <DD>${h.dname}->${h.sname},${h.floorage}平米<BR>联系方式：${h.contact}<br>类型:${h.tname} <br>时间:<fmt:formatDate value="${h.pubdate}" pattern="yyyy-MM-dd"></fmt:formatDate></DD></DL></TD>
       <TD class=house-type><LABEL class=ui-green><INPUT onclick=location.href="/con5/Onehouse?id=${h.id}" value="修    改" type=button name=search ></LABEL></TD>
       <TD class=house-price><LABEL class=ui-green><INPUT value="删    除" type=button name="search" onclick="todel(${h.id})"></LABEL></TD>

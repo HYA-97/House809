@@ -75,13 +75,13 @@
         <div class="block">
             <p class="block-heading">Sign In</p><p align="center" id="message" style="margin-top:20px;color:red">${msg}</p>
             <div class="block-body">
-                <form action="/con/login" method="post" onsubmit="return toLog()">
-                    <label>username</label>
+                <form action="/con/login2" method="post" onsubmit="return toLog()">
+                    <label>手机号码</label>
                     <span></span>
-                    <input name="name" type="text" class="span12" value="${user.name}">
-                    <label>Password</label>
+                    <input name="telephone" id="inputTel" type="text" class="span12" value="${userSms.name}">
+                    <label>验证码</label>
                     <span></span>
-                    <input name="password" type="password" class="span12">
+                    <input name="code" type="text" class="span7"><input type="button" id="sendButton" class="btn-link" value="获取验证码"></br>
                     <input type="submit" class="btn btn-primary pull-right" value="登录">
                     <label class="remember-me"><input type="checkbox"> Remember me</label>
                     <div class="clearfix"></div>
@@ -89,8 +89,7 @@
             </div>
         </div>
         <p class="pull-right" style=""><a href="/page/add.jsp">注册</a></p>
-        <p><a href="/page/sms.jsp">短信验证码登录</a></p>
-        <p><a href="reset-password.html">忘记密码?</a></p>
+        <p><a href="/page/login.jsp">返回</a></p>
     </div>
 </div>
 </body>
@@ -98,11 +97,11 @@
 <script src="../bootstrap/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
 
-    $("input[name='name']").blur(function () {
+    $("input[name='telephone']").blur(function () {
         if(this.value.trim()==""){
             $('span:eq(2)').html('用户名不能为空').css("color","red")
         }else if(this.value.length>=0){
-            $.post("/con/uName?name="+this.value,function (i) {
+            $.post("/con/tel?telephone="+this.value,function (i) {
                 if(i!=1){
                     $('span:eq(2)').html('用户不存在，请重新输入！').css("color","red")
                 }else {
@@ -114,8 +113,8 @@
     });
 
     function toLog(){
-        var pwd = $("input[name='password']").val();
-        var name = $("input[name='name']").val()
+        var pwd = $("input[name='code']").val();
+        var name = $("input[name='telephone']").val()
         if(pwd.trim()==""){
             // alert("密码不能为空！")
             $('span:eq(3)').html('密码不能为空').css("color","red")
@@ -129,21 +128,36 @@
         }
     }
 
+    var timeobj;
+        //发送验证码
+        $("#sendButton").click(function(){
 
-    /*$("input[name='password']").focus(function () {
-        if($("p[id='message']").val()==${msg}){
-            alert(${msg})
-        }
-    })*/
+            $.post("/sms/loginSms",{"tel":$("#inputTel").val()},function(data){
+                alert(data.result);
+                if(data.result>0) {
+                    //安装定时
+                    timeobj=setInterval("goback()",1000);
+                    alert("发送验证码成功");
+                }
+                else
+                    alert("发送失败");
+            },"json");
 
-    /*$("input[name='password']").blur(function () {
-        if(this.value.trim()==""){
-            $('span:eq(3)').html('密码不能为空').css("color","red")
-        }else if(this.value.length!=0){
-            $('span:eq(3)').html('OK').css("color","green")
-        }else {
-            $('span:eq(3)').html('长度只能为6位').css("color","red")
+        });
+
+
+    //显示倒计时
+    var time=60;
+    function goback(){
+        time--;
+        if(time==0) {
+            $("#sendButton").val("重新发送");
+            time=60;
+            clearInterval(timeobj); //消除定时
         }
-    });*/
+        else {
+            $("#sendButton").val(time);
+        }
+    }
 </script>
 </html>

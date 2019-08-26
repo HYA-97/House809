@@ -79,4 +79,17 @@ public class UsersService implements IUsersService {
         c.andIdIn(Arrays.asList(ids));
         return Umapper.deleteByExample(d);
     }
+
+    @Override
+    public Users tel(String telephone) {
+        UsersExample d = new UsersExample();
+        UsersExample.Criteria c = d.createCriteria();
+        c.andTelephoneEqualTo(telephone);
+        List<Users> list = Umapper.selectByExample(d);
+        if(list.size()==0){
+            return null;
+        }else {
+            return list.get(0);
+        }
+    }
 }

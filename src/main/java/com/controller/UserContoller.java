@@ -3,6 +3,7 @@ package com.controller;
 import com.github.pagehelper.PageInfo;
 import com.pojo.Users;
 import com.service.impl.UsersService;
+import com.sms.UserSms;
 import com.util.pageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -29,6 +31,14 @@ public class UserContoller {
     @ResponseBody
     public int selectName(String name){
         int i = service.uName(name);
+        return i;
+    }
+
+    @RequestMapping("/tel")
+    @ResponseBody
+    public int selectTel(String telephone){
+        Users uu = service.tel(telephone);
+        int i = uu==null?0:1;
         return i;
     }
 
@@ -49,6 +59,25 @@ public class UserContoller {
         return str;
     }
 
+    @RequestMapping("/login2")
+    public String login2(UserSms sms,HttpSession session){
+        String code = (String) session.getAttribute("code");
+        String str="";
+        if(sms.getCode().equals(code)){
+            Users userSms= service.tel(sms.getTelephone());
+            if(userSms==null){
+                str="sms";
+                session.setAttribute("userSms",userSms);
+                session.setAttribute("msg","验证码错误，请重新输入！");
+            }else if(userSms.getIsadmin()==1) {
+                str="redirect:../admin/admin.jsp";
+            }else {
+                str="redirect:/con5/PageSearch";
+                session.setAttribute("users",userSms);
+            }
+        }
+        return str;
+    }
     @RequestMapping("/toLog")
     public String toLog(){
         return "";
