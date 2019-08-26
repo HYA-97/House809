@@ -66,8 +66,9 @@ public class HouseContreller {
     }
 
     @RequestMapping("/houseOne")
-    public ModelAndView houseOne(HttpSession session,ModelAndView mav, Uhouse uh){
-        PageInfo<Uhouse> pageInfo = (PageInfo)session.getAttribute("pageInfo");
+    public ModelAndView houseOne(HttpSession session,ModelAndView mav, Uhouse uh,pageBean page){
+        Users us = (Users)session.getAttribute("users");
+        PageInfo<Uhouse> pageInfo = serivce.selectALLById(page,us.getId());
         List<Uhouse> list = pageInfo.getList();
         mav.addObject("list",list);
         mav.addObject("house",uh);
